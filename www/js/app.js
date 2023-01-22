@@ -4,7 +4,7 @@ var convertDHT2Fahrenheit = false;
 var ws_source;
 var event_source;
 var log_off = false;
-var async_webcommunication = false;
+var async_webcommunication = true;
 var websocket_port = 0;
 var websocket_ip = "";
 var esp_hostname = "ESP3D WebUI";
@@ -388,6 +388,7 @@ function initUI() {
     if (typeof id('FW_VERSION') != "undefined") id('FW_VERSION').innerHTML = fw_version;
     // Get the element with id="defaultOpen" and click on it
     id("maintablink").click();
+    
 
     if (typeof id("grblcontroltablink") !== 'undefined') {
         id("grblcontroltablink").click();
@@ -438,10 +439,12 @@ function initUI_4() {
         AddCmd(closeModal);
         AddCmd(show_main_UI);
     }
+    
 }
 
 function show_main_UI() {
     displayUndoNone('main_ui');
+    id("slidertabink").click();
 }
 
 function compareStrings(a, b) {

@@ -17,7 +17,7 @@ var defaultpreferenceslist = "[{\
                                             \"autoreport_interval\":\"50\",\
                                             \"interval_positions\":\"3\",\
                                             \"interval_status\":\"3\",\
-                                            \"xy_feedrate\":\"1000\",\
+                                            \"xy_feedrate\":\"10000\",\
                                             \"z_feedrate\":\"100\",\
                                             \"a_feedrate\":\"100\",\
                                             \"b_feedrate\":\"100\",\
@@ -56,7 +56,7 @@ function initpreferences() {
                                             \"autoreport_interval\":\"50\",\
                                             \"interval_positions\":\"3\",\
                                             \"interval_status\":\"3\",\
-                                            \"xy_feedrate\":\"1000\",\
+                                            \"xy_feedrate\":\"10000\",\
                                             \"z_feedrate\":\"100\",\
                                             \"a_feedrate\":\"100\",\
                                             \"b_feedrate\":\"100\",\

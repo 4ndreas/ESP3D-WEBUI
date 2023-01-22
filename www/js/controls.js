@@ -176,6 +176,7 @@ function JogFeedrate(axis) {
 }
 
 function SendJogcommand(cmd, feedrate) {
+    console.log(cmd)
     if (id('lock_UI').checked) return;
     var feedratevalue = "";
     var command = "";

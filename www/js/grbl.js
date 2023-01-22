@@ -466,6 +466,7 @@ function grblProcessStatus(response) {
     show_grbl_SD(grbl.sdName, grbl.sdPercent);
     show_grbl_probe_status(grbl.pins && (grbl.pins.indexOf('P') != -1));
     tabletGrblState(grbl, response);
+    sliderGrblState(grbl, response);
 }
 
 function grbl_reset() {
