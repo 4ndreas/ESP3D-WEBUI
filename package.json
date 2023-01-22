@@ -20,10 +20,13 @@
     "gulp-replace": "latest",
     "gulp-smoosher": "latest",
     "gulp-uglify": "^3.0.2",
+    "gulp-webserver": "^0.9.1",
     "gulp-zip": "latest",
+    "http-proxy-middleware": "^2.0.6",
     "jshint": "latest",
     "merge-stream": "latest",
-    "uglify-js": "^3.14.2"
+    "uglify-js": "^3.14.2",
+    "proxy-middleware": "^0.15.0"
   },
   "repository": "https://github.com/luc-github/ESP3D-WEBUI",
   "author": "Luc LEBOSSE",

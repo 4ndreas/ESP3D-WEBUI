@@ -15,6 +15,10 @@ var gulp = require('gulp'),
     smoosher = require('gulp-smoosher');
     size = require('gulp-filesize');
 
+var server = require('gulp-webserver');
+
+const { createProxyMiddleware } = require('http-proxy-middleware');
+
 var fl_lang = false;
 var en_lang = false;
 var fr_lang = false;
@@ -334,6 +338,49 @@ function compress() {
         .pipe(size());
 }
 
+function webserver(){
+    
+    var esp32IP = process.argv[process.argv.indexOf("dev") + 1].replace('--','');;
+    
+    var proxies = [];
+
+    if (esp32IP != null) {
+        console.log('Set proxy to esp32 IP: ' + esp32IP);
+
+        const commandProxy = createProxyMiddleware('/command',{
+            target: 'http://' + esp32IP, 
+            changeOrigin: true,
+        });
+        
+        const uploadProxy = createProxyMiddleware('/upload',{
+            target: 'http://' + esp32IP,
+            changeOrigin: true,
+        });
+
+        const jsonProxy = createProxyMiddleware('/*.json',{
+            target: 'http://' + esp32IP,
+            changeOrigin: true,
+        });
+
+        const websocketProxy =  createProxyMiddleware('ws://',{
+            target: 'ws://' + esp32IP,
+            changeOrigin: true,
+            ws: true,
+        });
+
+        proxies = [commandProxy,uploadProxy,jsonProxy,websocketProxy];
+    }
+
+    gulp.src('./dist')	// <-- your app folder
+      .pipe(server({
+        livereload: true,
+        open: false,
+        directoryListing: false,
+        port: 8080,	// set a port to avoid conflicts with other local apps
+        middleware: proxies
+      }));
+}
+
 gulp.task(clean);
 gulp.task(lint);
 gulp.task(Copy);
@@ -345,7 +392,7 @@ gulp.task(concatApptest);
 gulp.task(minifyApp);
 gulp.task(smoosh);
 gulp.task(clean2);
-gulp.task(clearlang)
+gulp.task(clearlang);
 
 var defaultSeries = gulp.series(clean,  lint, Copy, concatApp, minifyApp, includehtml, includehtml, smoosh);
 //var packageSeries = gulp.series(clean,  lint, Copy, concatApp, minifyApp, smoosh, compress);
@@ -353,8 +400,16 @@ var packageSeries = gulp.series(clean,  lint, Copy, concatApp, includehtml, incl
 var package2Series = gulp.series(clean,  lint, Copy, concatApp, includehtml, includehtml, replaceVersion, replaceSVG, smoosh);
 var package2testSeries = gulp.series(clean,  lint, Copytest, concatApptest, includehtml, includehtml, replaceSVG, smoosh);
 
+var dev = gulp.series(clean,  lint, Copy, concatApp, includehtml, includehtml, replaceVersion, replaceSVG, smoosh, webserver);
+var updateDev = gulp.series(clean,  lint, Copy, concatApp, includehtml, includehtml, replaceVersion, replaceSVG, smoosh);
+var updateDevTest = gulp.series(clean,  lint, Copytest, concatApptest, includehtml, includehtml, replaceVersion, replaceSVG, smoosh);
+
 gulp.task('default', defaultSeries);
 gulp.task('package', packageSeries);
 gulp.task('package2', package2Series);
 gulp.task('package2test', package2testSeries);
 
+// local webserver for development
+gulp.task('dev', dev); // <-- use this to start the webserver
+gulp.task('update', updateDev); // <-- use this to update the website while the webserver is running 
+gulp.task('updateTest', updateDevTest); // <-- use test mode so no cmds are send to the ESP32
